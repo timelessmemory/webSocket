@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	    <title>WebSocket Client</title>
+	    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<style type="text/css">
+		    ::-webkit-scrollbar {
+		        background-color: transparent;
+		        width: 7px;
+		        height: 7px;
+		    }
+		    ::-webkit-scrollbar-track {
+		          background: #c8c9ca;
+		          border-radius: 4px;
+		    }
+			::-webkit-scrollbar-thumb {
+		          background:#38c4a9;
+		          min-height:6px;
+		          width:5px;
+		          border-radius:4px;
+		    }
+		    #message {
+		        padding-left:10px;
+		        max-height:374px;
+		        width:100%;  
+		        overflow-y:auto;
+		        overflow-x:hidden;
+		        border:1px solid #C3C4C5;
+		        height:374px;
+		    }
+		</style>
+		<script type="text/javascript">
+		    var websocket = null;
+
+		    if ('WebSocket' in window) {
+		        websocket = new WebSocket("ws://localhost:80/web/websocket");
+		    } else {
+		        alert("该浏览器不支持webSocket");
+		    }
+
+		    websocket.onopen = function(event) {
+		        console.log("connect into server");
+		    };
+
+		    websocket.onmessage = function(event) {
+		    	var data = $.parseJSON(event.data);
+		    };
+
+		    websocket.onclose = function() {
+		        console.log("close connect");
+		    };
+
+		    websocket.onerror = function() {
+		        console.log("unknown error occurred");
+		    };
+
+		    window.onbeforeunload = function () {
+		        closeWebSocket();
+		    };
+
+		    function closeWebSocket() {
+		        websocket.close();
+		    }
+
+		    function refreshQRcode() {
+		        websocket.send();
+		    }
+		</script>
+	</head>
+	<body>
+		<div class="container-fluid" style="margin-top: 8px;">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <p class="text-right">
+		            	<button onclick="refreshQRcode()" class="btn btn-info">刷新二维码</button>
+		            </p>
+		        </div>
+		    </div>
+		</div>
+	</body>
+</html>
